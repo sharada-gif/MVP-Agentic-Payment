@@ -1,0 +1,67 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfvars
+terraform/.terraform.tfstate.lock.info
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore
+
+# AWS
+.aws/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+
+# API Connector - Generated/temporary output files
+api-connector/*_output.json
+api-connector/*_real.json
+api-connector/__pycache__/

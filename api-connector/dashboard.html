@@ -224,11 +224,11 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Services</div>
-                <div class="stat-value">2</div>
+                <div class="stat-value">3</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Infrastructure</div>
-                <div class="stat-value">4</div>
+                <div class="stat-value">12</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Environment</div>
@@ -242,8 +242,8 @@
         
         <div class="tabs">
             <button class="tab active" onclick="showTab('apis')">APIs (4)</button>
-            <button class="tab" onclick="showTab('services')">Services (2)</button>
-            <button class="tab" onclick="showTab('infrastructure')">Infrastructure (4)</button>
+            <button class="tab" onclick="showTab('services')">Services (3)</button>
+            <button class="tab" onclick="showTab('infrastructure')">Infrastructure (12)</button>
         </div>
         
         <div id="apis" class="tab-content active">
@@ -390,7 +390,7 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Infrastructure:</span>
-                        <span class="detail-value">3</span>
+                        <span class="detail-value">6</span>
                     </div>
                 </div>
             </div>
@@ -398,6 +398,30 @@
             <div class="card service-card">
                 <div class="card-header">
                     <h3>payment-worker</h3>
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">infrastructure</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Language:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">APIs:</span>
+                        <span class="detail-value">0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Infrastructure:</span>
+                        <span class="detail-value">3</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card service-card">
+                <div class="card-header">
+                    <h3>agent-runner</h3>
                 </div>
                 <div class="details">
                     <div class="detail-item">
@@ -441,11 +465,11 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Environment:</span>
-                        <span class="detail-value">production</span>
+                        <span class="detail-value">N/A</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Region:</span>
-                        <span class="detail-value">us-east-1</span>
+                        <span class="detail-value">N/A</span>
                     </div>
                 </div>
             </div>
@@ -454,7 +478,7 @@
                 <div class="card-header">
                     <h3>payment_api</h3>
                 </div>
-                <div class="path">aws_ecs_service</div>
+                <div class="path">aws_lb_target_group</div>
                 <div class="details">
                     <div class="detail-item">
                         <span class="detail-label">Provider:</span>
@@ -466,36 +490,11 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Environment:</span>
-                        <span class="detail-value">production</span>
+                        <span class="detail-value">N/A</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Region:</span>
-                        <span class="detail-value">us-east-1</span>
-                    </div>
-                </div>
-            </div>
-        
-            <div class="card infra-card">
-                <div class="card-header">
-                    <h3>payments</h3>
-                </div>
-                <div class="path">aws_sqs_queue</div>
-                <div class="details">
-                    <div class="detail-item">
-                        <span class="detail-label">Provider:</span>
-                        <span class="detail-value">aws</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Service:</span>
-                        <span class="detail-value">payment-worker</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Environment:</span>
-                        <span class="detail-value">production</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Region:</span>
-                        <span class="detail-value">us-east-1</span>
+                        <span class="detail-value">N/A</span>
                     </div>
                 </div>
             </div>
@@ -516,11 +515,236 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Environment:</span>
-                        <span class="detail-value">production</span>
+                        <span class="detail-value">N/A</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Region:</span>
-                        <span class="detail-value">us-east-1</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>payments</h3>
+                </div>
+                <div class="path">aws_sqs_queue</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-worker</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>payments_dlq</h3>
+                </div>
+                <div class="path">aws_sqs_queue</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-worker</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>receipts</h3>
+                </div>
+                <div class="path">aws_s3_bucket</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>main</h3>
+                </div>
+                <div class="path">aws_ecs_cluster</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>payment_api</h3>
+                </div>
+                <div class="path">aws_ecs_service</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>payment_worker</h3>
+                </div>
+                <div class="path">aws_ecs_service</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-worker</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>agent_runner</h3>
+                </div>
+                <div class="path">aws_ecs_service</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">agent-runner</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>main</h3>
+                </div>
+                <div class="path">aws_vpc</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>main</h3>
+                </div>
+                <div class="path">aws_wafv2_web_acl</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">N/A</span>
                     </div>
                 </div>
             </div>
@@ -569,7 +793,10 @@
       "infrastructure_refs": [
         "infra1",
         "infra2",
-        "infra4"
+        "infra3",
+        "infra6",
+        "infra8",
+        "infra12"
       ]
     },
     {
@@ -637,7 +864,10 @@
       "infrastructure_refs": [
         "infra1",
         "infra2",
-        "infra4"
+        "infra3",
+        "infra6",
+        "infra8",
+        "infra12"
       ]
     },
     {
@@ -696,7 +926,10 @@
       "infrastructure_refs": [
         "infra1",
         "infra2",
-        "infra4"
+        "infra3",
+        "infra6",
+        "infra8",
+        "infra12"
       ]
     },
     {
@@ -736,7 +969,10 @@
       "infrastructure_refs": [
         "infra1",
         "infra2",
-        "infra4"
+        "infra3",
+        "infra6",
+        "infra8",
+        "infra12"
       ]
     }
   ],
@@ -748,13 +984,15 @@
       "resource_name": "main",
       "resource_address": "module.alb.aws_lb.main",
       "attributes": {
-        "name": "payment-api-alb",
-        "type": "application"
+        "name": "payment-${var.environment}-alb",
+        "type": "application",
+        "internal": false,
+        "load_balancer_type": "application"
       },
       "routes": [],
       "target_group": null,
-      "listener_port": 443,
-      "listener_protocol": "HTTPS",
+      "listener_port": 80,
+      "listener_protocol": "HTTP",
       "service_name": "payment-api",
       "service_arns": [
         "api1",
@@ -765,18 +1003,172 @@
       "vpc_id": null,
       "subnet_ids": [],
       "security_group_ids": [],
-      "extracted_at": "2026-01-12T19:51:47.375238",
-      "environment": "production",
-      "region": "us-east-1"
+      "extracted_at": "2026-01-12T20:33:25.424029",
+      "environment": null,
+      "region": null
     },
     {
       "id": "infra2",
+      "type": "aws_lb_target_group",
+      "provider": "aws",
+      "resource_name": "payment_api",
+      "resource_address": "module.alb.aws_lb_target_group.payment_api",
+      "attributes": {
+        "name": "payment-${var.environment}-payment-api-tg",
+        "port": 8080,
+        "protocol": "HTTP",
+        "health_check_path": "/health"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424740",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra3",
+      "type": "aws_db_instance",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.rds.aws_db_instance.main",
+      "attributes": {
+        "engine": "postgres",
+        "engine_version": "16.3",
+        "instance_class": "${var.db_instance_class}",
+        "identifier": "payment-${var.environment}-postgres",
+        "db_name": "${var.db_name}"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424766",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra4",
+      "type": "aws_sqs_queue",
+      "provider": "aws",
+      "resource_name": "payments",
+      "resource_address": "module.sqs.aws_sqs_queue.payments",
+      "attributes": {
+        "name": "payment-${var.environment}-payments"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-worker",
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424784",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra5",
+      "type": "aws_sqs_queue",
+      "provider": "aws",
+      "resource_name": "payments_dlq",
+      "resource_address": "module.sqs.aws_sqs_queue.payments_dlq",
+      "attributes": {
+        "name": "payment-${var.environment}-payments-dlq"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-worker",
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424806",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra6",
+      "type": "aws_s3_bucket",
+      "provider": "aws",
+      "resource_name": "receipts",
+      "resource_address": "module.s3.aws_s3_bucket.receipts",
+      "attributes": {
+        "name": "payment-${var.environment}-receipts-${random_string.suffix.result}"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424821",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra7",
+      "type": "aws_ecs_cluster",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.ecs_cluster.aws_ecs_cluster.main",
+      "attributes": {
+        "name": "payment-${var.environment}-cluster"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": null,
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424836",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra8",
       "type": "aws_ecs_service",
       "provider": "aws",
       "resource_name": "payment_api",
       "resource_address": "module.ecs_services.aws_ecs_service.payment_api",
       "attributes": {
-        "name": "payment-api-service",
+        "name": "payment-${var.environment}-payment-api",
         "desired_count": 2
       },
       "routes": [],
@@ -793,18 +1185,19 @@
       "vpc_id": null,
       "subnet_ids": [],
       "security_group_ids": [],
-      "extracted_at": "2026-01-12T19:51:47.375674",
-      "environment": "production",
-      "region": "us-east-1"
+      "extracted_at": "2026-01-12T20:33:25.424850",
+      "environment": null,
+      "region": null
     },
     {
-      "id": "infra3",
-      "type": "aws_sqs_queue",
+      "id": "infra9",
+      "type": "aws_ecs_service",
       "provider": "aws",
-      "resource_name": "payments",
-      "resource_address": "module.sqs.aws_sqs_queue.payments",
+      "resource_name": "payment_worker",
+      "resource_address": "module.ecs_services.aws_ecs_service.payment_worker",
       "attributes": {
-        "name": "payment-mvp-payments"
+        "name": "payment-${var.environment}-payment-worker",
+        "desired_count": 1
       },
       "routes": [],
       "target_group": null,
@@ -815,19 +1208,65 @@
       "vpc_id": null,
       "subnet_ids": [],
       "security_group_ids": [],
-      "extracted_at": "2026-01-12T19:51:47.375685",
-      "environment": "production",
-      "region": "us-east-1"
+      "extracted_at": "2026-01-12T20:33:25.424865",
+      "environment": null,
+      "region": null
     },
     {
-      "id": "infra4",
-      "type": "aws_db_instance",
+      "id": "infra10",
+      "type": "aws_ecs_service",
+      "provider": "aws",
+      "resource_name": "agent_runner",
+      "resource_address": "module.ecs_services.aws_ecs_service.agent_runner",
+      "attributes": {
+        "name": "payment-${var.environment}-agent-runner",
+        "desired_count": 1
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "agent-runner",
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424880",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra11",
+      "type": "aws_vpc",
       "provider": "aws",
       "resource_name": "main",
-      "resource_address": "module.rds.aws_db_instance.main",
+      "resource_address": "module.vpc.aws_vpc.main",
       "attributes": {
-        "engine": "postgres",
-        "instance_class": "db.t3.micro"
+        "cidr_block": "${var.vpc_cidr}",
+        "enable_dns_hostnames": true,
+        "enable_dns_support": true
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": null,
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T20:33:25.424894",
+      "environment": null,
+      "region": null
+    },
+    {
+      "id": "infra12",
+      "type": "aws_wafv2_web_acl",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.waf.aws_wafv2_web_acl.main",
+      "attributes": {
+        "name": "payment-${var.environment}-waf"
       },
       "routes": [],
       "target_group": null,
@@ -843,9 +1282,9 @@
       "vpc_id": null,
       "subnet_ids": [],
       "security_group_ids": [],
-      "extracted_at": "2026-01-12T19:51:47.375693",
-      "environment": "production",
-      "region": "us-east-1"
+      "extracted_at": "2026-01-12T20:33:25.424908",
+      "environment": null,
+      "region": null
     }
   ],
   "services": [
@@ -865,7 +1304,10 @@
       "infrastructure_ids": [
         "infra1",
         "infra2",
-        "infra4"
+        "infra3",
+        "infra6",
+        "infra8",
+        "infra12"
       ]
     },
     {
@@ -877,12 +1319,26 @@
       "docker_image": null,
       "api_ids": [],
       "infrastructure_ids": [
-        "infra3"
+        "infra4",
+        "infra5",
+        "infra9"
+      ]
+    },
+    {
+      "name": "agent-runner",
+      "type": "infrastructure",
+      "language": null,
+      "framework": null,
+      "source_directory": null,
+      "docker_image": null,
+      "api_ids": [],
+      "infrastructure_ids": [
+        "infra10"
       ]
     }
   ],
   "log_enrichments": [],
-  "extracted_at": "2026-01-12T19:51:47.376060",
+  "extracted_at": "2026-01-12T20:37:39.106146",
   "environment": "production",
   "source_directories": [
     "api-connector"
@@ -892,8 +1348,8 @@
   ],
   "stats": {
     "total_apis": 4,
-    "total_infrastructure": 4,
-    "total_services": 2,
+    "total_infrastructure": 12,
+    "total_services": 3,
     "api_methods": {
       "GET": 1,
       "POST": 3
@@ -901,11 +1357,16 @@
     "services_count": 1,
     "infrastructure_types": {
       "aws_lb": 1,
-      "aws_ecs_service": 1,
-      "aws_sqs_queue": 1,
-      "aws_db_instance": 1
+      "aws_lb_target_group": 1,
+      "aws_db_instance": 1,
+      "aws_sqs_queue": 2,
+      "aws_s3_bucket": 1,
+      "aws_ecs_cluster": 1,
+      "aws_ecs_service": 3,
+      "aws_vpc": 1,
+      "aws_wafv2_web_acl": 1
     },
-    "extraction_timestamp": "2026-01-12T19:51:47.376042"
+    "extraction_timestamp": "2026-01-12T20:37:39.105731"
   },
   "schema_version": "1.0.0"
 };

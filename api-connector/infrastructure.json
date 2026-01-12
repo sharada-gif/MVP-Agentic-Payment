@@ -6,54 +6,160 @@
     "resource_name": "main",
     "resource_address": "module.alb.aws_lb.main",
     "service_name": "payment-api",
-    "environment": "production",
-    "region": "us-east-1",
-    "listener_port": 443,
-    "listener_protocol": "HTTPS",
+    "environment": null,
+    "region": null,
+    "listener_port": 80,
+    "listener_protocol": "HTTP",
     "attributes": {
-      "name": "payment-api-alb",
-      "type": "application"
-    }
+      "name": "payment-${var.environment}-alb",
+      "type": "application",
+      "internal": false,
+      "load_balancer_type": "application"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424029"
   },
   {
     "id": "infra2",
-    "type": "aws_ecs_service",
+    "type": "aws_lb_target_group",
     "provider": "aws",
     "resource_name": "payment_api",
-    "resource_address": "module.ecs_services.aws_ecs_service.payment_api",
+    "resource_address": "module.alb.aws_lb_target_group.payment_api",
     "service_name": "payment-api",
-    "environment": "production",
-    "region": "us-east-1",
     "attributes": {
-      "name": "payment-api-service",
-      "desired_count": 2
-    }
+      "name": "payment-${var.environment}-payment-api-tg",
+      "port": 8080,
+      "protocol": "HTTP",
+      "health_check_path": "/health"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424740"
   },
   {
     "id": "infra3",
-    "type": "aws_sqs_queue",
-    "provider": "aws",
-    "resource_name": "payments",
-    "resource_address": "module.sqs.aws_sqs_queue.payments",
-    "service_name": "payment-worker",
-    "environment": "production",
-    "region": "us-east-1",
-    "attributes": {
-      "name": "payment-mvp-payments"
-    }
-  },
-  {
-    "id": "infra4",
     "type": "aws_db_instance",
     "provider": "aws",
     "resource_name": "main",
     "resource_address": "module.rds.aws_db_instance.main",
     "service_name": "payment-api",
-    "environment": "production",
-    "region": "us-east-1",
     "attributes": {
       "engine": "postgres",
-      "instance_class": "db.t3.micro"
-    }
+      "engine_version": "16.3",
+      "instance_class": "${var.db_instance_class}",
+      "identifier": "payment-${var.environment}-postgres",
+      "db_name": "${var.db_name}"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424766"
+  },
+  {
+    "id": "infra4",
+    "type": "aws_sqs_queue",
+    "provider": "aws",
+    "resource_name": "payments",
+    "resource_address": "module.sqs.aws_sqs_queue.payments",
+    "service_name": "payment-worker",
+    "attributes": {
+      "name": "payment-${var.environment}-payments"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424784"
+  },
+  {
+    "id": "infra5",
+    "type": "aws_sqs_queue",
+    "provider": "aws",
+    "resource_name": "payments_dlq",
+    "resource_address": "module.sqs.aws_sqs_queue.payments_dlq",
+    "service_name": "payment-worker",
+    "attributes": {
+      "name": "payment-${var.environment}-payments-dlq"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424806"
+  },
+  {
+    "id": "infra6",
+    "type": "aws_s3_bucket",
+    "provider": "aws",
+    "resource_name": "receipts",
+    "resource_address": "module.s3.aws_s3_bucket.receipts",
+    "service_name": "payment-api",
+    "attributes": {
+      "name": "payment-${var.environment}-receipts-${random_string.suffix.result}"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424821"
+  },
+  {
+    "id": "infra7",
+    "type": "aws_ecs_cluster",
+    "provider": "aws",
+    "resource_name": "main",
+    "resource_address": "module.ecs_cluster.aws_ecs_cluster.main",
+    "service_name": null,
+    "attributes": {
+      "name": "payment-${var.environment}-cluster"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424836"
+  },
+  {
+    "id": "infra8",
+    "type": "aws_ecs_service",
+    "provider": "aws",
+    "resource_name": "payment_api",
+    "resource_address": "module.ecs_services.aws_ecs_service.payment_api",
+    "service_name": "payment-api",
+    "attributes": {
+      "name": "payment-${var.environment}-payment-api",
+      "desired_count": 2
+    },
+    "extracted_at": "2026-01-12T20:33:25.424850"
+  },
+  {
+    "id": "infra9",
+    "type": "aws_ecs_service",
+    "provider": "aws",
+    "resource_name": "payment_worker",
+    "resource_address": "module.ecs_services.aws_ecs_service.payment_worker",
+    "service_name": "payment-worker",
+    "attributes": {
+      "name": "payment-${var.environment}-payment-worker",
+      "desired_count": 1
+    },
+    "extracted_at": "2026-01-12T20:33:25.424865"
+  },
+  {
+    "id": "infra10",
+    "type": "aws_ecs_service",
+    "provider": "aws",
+    "resource_name": "agent_runner",
+    "resource_address": "module.ecs_services.aws_ecs_service.agent_runner",
+    "service_name": "agent-runner",
+    "attributes": {
+      "name": "payment-${var.environment}-agent-runner",
+      "desired_count": 1
+    },
+    "extracted_at": "2026-01-12T20:33:25.424880"
+  },
+  {
+    "id": "infra11",
+    "type": "aws_vpc",
+    "provider": "aws",
+    "resource_name": "main",
+    "resource_address": "module.vpc.aws_vpc.main",
+    "service_name": null,
+    "attributes": {
+      "cidr_block": "${var.vpc_cidr}",
+      "enable_dns_hostnames": true,
+      "enable_dns_support": true
+    },
+    "extracted_at": "2026-01-12T20:33:25.424894"
+  },
+  {
+    "id": "infra12",
+    "type": "aws_wafv2_web_acl",
+    "provider": "aws",
+    "resource_name": "main",
+    "resource_address": "module.waf.aws_wafv2_web_acl.main",
+    "service_name": "payment-api",
+    "attributes": {
+      "name": "payment-${var.environment}-waf"
+    },
+    "extracted_at": "2026-01-12T20:33:25.424908"
   }
 ]
