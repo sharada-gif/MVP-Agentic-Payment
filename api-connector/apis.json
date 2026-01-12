@@ -1,0 +1,142 @@
+[
+  {
+    "id": "api1",
+    "method": "GET",
+    "path": "/health",
+    "handler_name": "health",
+    "handler_file": "apps/payment-api/main.py",
+    "handler_line": 57,
+    "service_name": "payment-api",
+    "summary": "Health check endpoint",
+    "description": "Returns service health status",
+    "tags": [
+      "health",
+      "monitoring"
+    ],
+    "parameters": [],
+    "responses": [
+      {
+        "status_code": 200,
+        "description": "Service is healthy"
+      }
+    ],
+    "auth_required": false,
+    "scopes": [],
+    "source": "static",
+    "extracted_at": "2026-01-12T19:51:40.635696",
+    "confidence": 1.0
+  },
+  {
+    "id": "api2",
+    "method": "POST",
+    "path": "/charge",
+    "handler_name": "create_charge",
+    "handler_file": "apps/payment-api/main.py",
+    "handler_line": 66,
+    "service_name": "payment-api",
+    "summary": "Create a new charge",
+    "description": "Creates a payment charge and enqueues it for processing",
+    "tags": [
+      "payment",
+      "charge"
+    ],
+    "parameters": [
+      {
+        "name": "amount",
+        "type": "float",
+        "location": "body",
+        "required": true
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "location": "body",
+        "required": false
+      },
+      {
+        "name": "customer_id",
+        "type": "string",
+        "location": "body",
+        "required": true
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "description": "Charge created successfully"
+      }
+    ],
+    "auth_required": false,
+    "scopes": [],
+    "source": "static",
+    "extracted_at": "2026-01-12T19:51:40.636261",
+    "confidence": 1.0
+  },
+  {
+    "id": "api3",
+    "method": "POST",
+    "path": "/refund",
+    "handler_name": "create_refund",
+    "handler_file": "apps/payment-api/main.py",
+    "handler_line": 149,
+    "service_name": "payment-api",
+    "summary": "Create a refund",
+    "description": "Creates a refund request",
+    "tags": [
+      "payment",
+      "refund"
+    ],
+    "parameters": [
+      {
+        "name": "charge_id",
+        "type": "string",
+        "location": "body",
+        "required": true
+      },
+      {
+        "name": "amount",
+        "type": "float",
+        "location": "body",
+        "required": false
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "description": "Refund created successfully"
+      }
+    ],
+    "auth_required": false,
+    "scopes": [],
+    "source": "static",
+    "extracted_at": "2026-01-12T19:51:40.636293",
+    "confidence": 1.0
+  },
+  {
+    "id": "api4",
+    "method": "POST",
+    "path": "/webhooks/stripe",
+    "handler_name": "stripe_webhook",
+    "handler_file": "apps/payment-api/main.py",
+    "handler_line": 204,
+    "service_name": "payment-api",
+    "summary": "Stripe webhook endpoint",
+    "description": "Receives webhook events from Stripe",
+    "tags": [
+      "webhook",
+      "stripe"
+    ],
+    "parameters": [],
+    "responses": [
+      {
+        "status_code": 200,
+        "description": "Webhook received"
+      }
+    ],
+    "auth_required": false,
+    "scopes": [],
+    "source": "static",
+    "extracted_at": "2026-01-12T19:51:40.636314",
+    "confidence": 1.0
+  }
+]

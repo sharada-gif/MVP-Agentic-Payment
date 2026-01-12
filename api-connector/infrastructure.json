@@ -1,0 +1,59 @@
+[
+  {
+    "id": "infra1",
+    "type": "aws_lb",
+    "provider": "aws",
+    "resource_name": "main",
+    "resource_address": "module.alb.aws_lb.main",
+    "service_name": "payment-api",
+    "environment": "production",
+    "region": "us-east-1",
+    "listener_port": 443,
+    "listener_protocol": "HTTPS",
+    "attributes": {
+      "name": "payment-api-alb",
+      "type": "application"
+    }
+  },
+  {
+    "id": "infra2",
+    "type": "aws_ecs_service",
+    "provider": "aws",
+    "resource_name": "payment_api",
+    "resource_address": "module.ecs_services.aws_ecs_service.payment_api",
+    "service_name": "payment-api",
+    "environment": "production",
+    "region": "us-east-1",
+    "attributes": {
+      "name": "payment-api-service",
+      "desired_count": 2
+    }
+  },
+  {
+    "id": "infra3",
+    "type": "aws_sqs_queue",
+    "provider": "aws",
+    "resource_name": "payments",
+    "resource_address": "module.sqs.aws_sqs_queue.payments",
+    "service_name": "payment-worker",
+    "environment": "production",
+    "region": "us-east-1",
+    "attributes": {
+      "name": "payment-mvp-payments"
+    }
+  },
+  {
+    "id": "infra4",
+    "type": "aws_db_instance",
+    "provider": "aws",
+    "resource_name": "main",
+    "resource_address": "module.rds.aws_db_instance.main",
+    "service_name": "payment-api",
+    "environment": "production",
+    "region": "us-east-1",
+    "attributes": {
+      "engine": "postgres",
+      "instance_class": "db.t3.micro"
+    }
+  }
+]

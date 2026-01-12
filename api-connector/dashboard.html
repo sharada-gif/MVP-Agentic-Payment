@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Extraction Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .method-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .method-GET { background: #e3f2fd; color: #1976d2; }
+        .method-POST { background: #e8f5e9; color: #388e3c; }
+        .method-PUT { background: #fff3e0; color: #f57c00; }
+        .method-DELETE { background: #ffebee; color: #d32f2f; }
+        .method-PATCH { background: #f3e5f5; color: #7b1fa2; }
+        
+        .path {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #333;
+            word-break: break-all;
+        }
+        
+        .description {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+        
+        .details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .detail-label {
+            color: #999;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            background: #f0f0f0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .service-card .card-header {
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+        
+        .infra-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .infra-card .card-header {
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔌 API Extraction Dashboard</h1>
+        <p>Framework-agnostic API and Infrastructure Discovery</p>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">APIs</div>
+                <div class="stat-value">4</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Services</div>
+                <div class="stat-value">2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Infrastructure</div>
+                <div class="stat-value">4</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Environment</div>
+                <div class="stat-value">production</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search APIs, services, infrastructure...">
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('apis')">APIs (4)</button>
+            <button class="tab" onclick="showTab('services')">Services (2)</button>
+            <button class="tab" onclick="showTab('infrastructure')">Infrastructure (4)</button>
+        </div>
+        
+        <div id="apis" class="tab-content active">
+            <div class="grid" id="apisGrid">
+                
+            <div class="card">
+                <div class="card-header">
+                    <span class="method-badge method-GET">GET</span>
+                </div>
+                <div class="path">/health</div>
+                <div class="description">Returns service health status</div>
+                
+            <div class="details">
+                <div class="detail-item">
+                    <span class="detail-label">Service:</span>
+                    <span class="detail-value">payment-api</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Handler:</span>
+                    <span class="detail-value">health</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">File:</span>
+                    <span class="detail-value">apps/payment-api/main.py</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Auth:</span>
+                    <span class="detail-value">Not Required</span>
+                </div>
+            </div>
+        
+                <div class="tags"><span class="tag">health</span><span class="tag">monitoring</span></div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <span class="method-badge method-POST">POST</span>
+                </div>
+                <div class="path">/charge</div>
+                <div class="description">Creates a payment charge and enqueues it for processing</div>
+                
+            <div class="details">
+                <div class="detail-item">
+                    <span class="detail-label">Service:</span>
+                    <span class="detail-value">payment-api</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Handler:</span>
+                    <span class="detail-value">create_charge</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">File:</span>
+                    <span class="detail-value">apps/payment-api/main.py</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Auth:</span>
+                    <span class="detail-value">Not Required</span>
+                </div>
+            </div>
+        
+                <div class="tags"><span class="tag">payment</span><span class="tag">charge</span></div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <span class="method-badge method-POST">POST</span>
+                </div>
+                <div class="path">/refund</div>
+                <div class="description">Creates a refund request</div>
+                
+            <div class="details">
+                <div class="detail-item">
+                    <span class="detail-label">Service:</span>
+                    <span class="detail-value">payment-api</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Handler:</span>
+                    <span class="detail-value">create_refund</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">File:</span>
+                    <span class="detail-value">apps/payment-api/main.py</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Auth:</span>
+                    <span class="detail-value">Not Required</span>
+                </div>
+            </div>
+        
+                <div class="tags"><span class="tag">payment</span><span class="tag">refund</span></div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <span class="method-badge method-POST">POST</span>
+                </div>
+                <div class="path">/webhooks/stripe</div>
+                <div class="description">Receives webhook events from Stripe</div>
+                
+            <div class="details">
+                <div class="detail-item">
+                    <span class="detail-label">Service:</span>
+                    <span class="detail-value">payment-api</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Handler:</span>
+                    <span class="detail-value">stripe_webhook</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">File:</span>
+                    <span class="detail-value">apps/payment-api/main.py</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Auth:</span>
+                    <span class="detail-value">Not Required</span>
+                </div>
+            </div>
+        
+                <div class="tags"><span class="tag">webhook</span><span class="tag">stripe</span></div>
+            </div>
+        
+            </div>
+        </div>
+        
+        <div id="services" class="tab-content">
+            <div class="grid" id="servicesGrid">
+                
+            <div class="card service-card">
+                <div class="card-header">
+                    <h3>payment-api</h3>
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Language:</span>
+                        <span class="detail-value">Python</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">APIs:</span>
+                        <span class="detail-value">4</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Infrastructure:</span>
+                        <span class="detail-value">3</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card service-card">
+                <div class="card-header">
+                    <h3>payment-worker</h3>
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">infrastructure</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Language:</span>
+                        <span class="detail-value">N/A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">APIs:</span>
+                        <span class="detail-value">0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Infrastructure:</span>
+                        <span class="detail-value">1</span>
+                    </div>
+                </div>
+            </div>
+        
+            </div>
+        </div>
+        
+        <div id="infrastructure" class="tab-content">
+            <div class="grid" id="infrastructureGrid">
+                
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>main</h3>
+                </div>
+                <div class="path">aws_lb</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">production</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">us-east-1</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>payment_api</h3>
+                </div>
+                <div class="path">aws_ecs_service</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">production</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">us-east-1</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>payments</h3>
+                </div>
+                <div class="path">aws_sqs_queue</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-worker</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">production</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">us-east-1</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card infra-card">
+                <div class="card-header">
+                    <h3>main</h3>
+                </div>
+                <div class="path">aws_db_instance</div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="detail-label">Provider:</span>
+                        <span class="detail-value">aws</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service:</span>
+                        <span class="detail-value">payment-api</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Environment:</span>
+                        <span class="detail-value">production</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Region:</span>
+                        <span class="detail-value">us-east-1</span>
+                    </div>
+                </div>
+            </div>
+        
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const data = {
+  "apis": [
+    {
+      "id": "api1",
+      "method": "GET",
+      "path": "/health",
+      "handler_name": "health",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 57,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Health check endpoint",
+      "description": "Returns service health status",
+      "tags": [
+        "health",
+        "monitoring"
+      ],
+      "deprecated": false,
+      "parameters": [],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Service is healthy",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.635696",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "id": "api2",
+      "method": "POST",
+      "path": "/charge",
+      "handler_name": "create_charge",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 66,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Create a new charge",
+      "description": "Creates a payment charge and enqueues it for processing",
+      "tags": [
+        "payment",
+        "charge"
+      ],
+      "deprecated": false,
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "float",
+          "location": "body",
+          "required": true,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "location": "body",
+          "required": false,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        },
+        {
+          "name": "customer_id",
+          "type": "string",
+          "location": "body",
+          "required": true,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        }
+      ],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Charge created successfully",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.636261",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "id": "api3",
+      "method": "POST",
+      "path": "/refund",
+      "handler_name": "create_refund",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 149,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Create a refund",
+      "description": "Creates a refund request",
+      "tags": [
+        "payment",
+        "refund"
+      ],
+      "deprecated": false,
+      "parameters": [
+        {
+          "name": "charge_id",
+          "type": "string",
+          "location": "body",
+          "required": true,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        },
+        {
+          "name": "amount",
+          "type": "float",
+          "location": "body",
+          "required": false,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        }
+      ],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Refund created successfully",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.636293",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "id": "api4",
+      "method": "POST",
+      "path": "/webhooks/stripe",
+      "handler_name": "stripe_webhook",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 204,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Stripe webhook endpoint",
+      "description": "Receives webhook events from Stripe",
+      "tags": [
+        "webhook",
+        "stripe"
+      ],
+      "deprecated": false,
+      "parameters": [],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Webhook received",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.636314",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "infra1",
+      "type": "aws_lb",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.alb.aws_lb.main",
+      "attributes": {
+        "name": "payment-api-alb",
+        "type": "application"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": 443,
+      "listener_protocol": "HTTPS",
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375238",
+      "environment": "production",
+      "region": "us-east-1"
+    },
+    {
+      "id": "infra2",
+      "type": "aws_ecs_service",
+      "provider": "aws",
+      "resource_name": "payment_api",
+      "resource_address": "module.ecs_services.aws_ecs_service.payment_api",
+      "attributes": {
+        "name": "payment-api-service",
+        "desired_count": 2
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375674",
+      "environment": "production",
+      "region": "us-east-1"
+    },
+    {
+      "id": "infra3",
+      "type": "aws_sqs_queue",
+      "provider": "aws",
+      "resource_name": "payments",
+      "resource_address": "module.sqs.aws_sqs_queue.payments",
+      "attributes": {
+        "name": "payment-mvp-payments"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-worker",
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375685",
+      "environment": "production",
+      "region": "us-east-1"
+    },
+    {
+      "id": "infra4",
+      "type": "aws_db_instance",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.rds.aws_db_instance.main",
+      "attributes": {
+        "engine": "postgres",
+        "instance_class": "db.t3.micro"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375693",
+      "environment": "production",
+      "region": "us-east-1"
+    }
+  ],
+  "services": [
+    {
+      "name": "payment-api",
+      "type": "api",
+      "language": "Python",
+      "framework": null,
+      "source_directory": "apps/payment-api",
+      "docker_image": null,
+      "api_ids": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "infrastructure_ids": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "name": "payment-worker",
+      "type": "infrastructure",
+      "language": null,
+      "framework": null,
+      "source_directory": null,
+      "docker_image": null,
+      "api_ids": [],
+      "infrastructure_ids": [
+        "infra3"
+      ]
+    }
+  ],
+  "log_enrichments": [],
+  "extracted_at": "2026-01-12T19:51:47.376060",
+  "environment": "production",
+  "source_directories": [
+    "api-connector"
+  ],
+  "terraform_directories": [
+    "api-connector"
+  ],
+  "stats": {
+    "total_apis": 4,
+    "total_infrastructure": 4,
+    "total_services": 2,
+    "api_methods": {
+      "GET": 1,
+      "POST": 3
+    },
+    "services_count": 1,
+    "infrastructure_types": {
+      "aws_lb": 1,
+      "aws_ecs_service": 1,
+      "aws_sqs_queue": 1,
+      "aws_db_instance": 1
+    },
+    "extraction_timestamp": "2026-01-12T19:51:47.376042"
+  },
+  "schema_version": "1.0.0"
+};
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function filterCards(searchTerm) {
+            const cards = document.querySelectorAll('.card');
+            const term = searchTerm.toLowerCase();
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            filterCards(e.target.value);
+        });
+    </script>
+</body>
+</html>

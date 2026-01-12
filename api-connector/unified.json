@@ -1,0 +1,379 @@
+{
+  "apis": [
+    {
+      "id": "api1",
+      "method": "GET",
+      "path": "/health",
+      "handler_name": "health",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 57,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Health check endpoint",
+      "description": "Returns service health status",
+      "tags": [
+        "health",
+        "monitoring"
+      ],
+      "deprecated": false,
+      "parameters": [],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Service is healthy",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.635696",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "id": "api2",
+      "method": "POST",
+      "path": "/charge",
+      "handler_name": "create_charge",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 66,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Create a new charge",
+      "description": "Creates a payment charge and enqueues it for processing",
+      "tags": [
+        "payment",
+        "charge"
+      ],
+      "deprecated": false,
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "float",
+          "location": "body",
+          "required": true,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "location": "body",
+          "required": false,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        },
+        {
+          "name": "customer_id",
+          "type": "string",
+          "location": "body",
+          "required": true,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        }
+      ],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Charge created successfully",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.636261",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "id": "api3",
+      "method": "POST",
+      "path": "/refund",
+      "handler_name": "create_refund",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 149,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Create a refund",
+      "description": "Creates a refund request",
+      "tags": [
+        "payment",
+        "refund"
+      ],
+      "deprecated": false,
+      "parameters": [
+        {
+          "name": "charge_id",
+          "type": "string",
+          "location": "body",
+          "required": true,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        },
+        {
+          "name": "amount",
+          "type": "float",
+          "location": "body",
+          "required": false,
+          "description": null,
+          "default_value": null,
+          "schema_ref": null
+        }
+      ],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Refund created successfully",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.636293",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "id": "api4",
+      "method": "POST",
+      "path": "/webhooks/stripe",
+      "handler_name": "stripe_webhook",
+      "handler_file": "apps/payment-api/main.py",
+      "handler_line": 204,
+      "handler_module": null,
+      "service_name": "payment-api",
+      "service_type": null,
+      "summary": "Stripe webhook endpoint",
+      "description": "Receives webhook events from Stripe",
+      "tags": [
+        "webhook",
+        "stripe"
+      ],
+      "deprecated": false,
+      "parameters": [],
+      "request_body_schema": null,
+      "responses": [
+        {
+          "status_code": 200,
+          "content_type": null,
+          "description": "Webhook received",
+          "schema_ref": null
+        }
+      ],
+      "auth_required": false,
+      "auth_type": null,
+      "scopes": [],
+      "extracted_at": "2026-01-12T19:51:40.636314",
+      "source": "static",
+      "confidence": 1.0,
+      "related_apis": [],
+      "infrastructure_refs": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "infra1",
+      "type": "aws_lb",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.alb.aws_lb.main",
+      "attributes": {
+        "name": "payment-api-alb",
+        "type": "application"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": 443,
+      "listener_protocol": "HTTPS",
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375238",
+      "environment": "production",
+      "region": "us-east-1"
+    },
+    {
+      "id": "infra2",
+      "type": "aws_ecs_service",
+      "provider": "aws",
+      "resource_name": "payment_api",
+      "resource_address": "module.ecs_services.aws_ecs_service.payment_api",
+      "attributes": {
+        "name": "payment-api-service",
+        "desired_count": 2
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375674",
+      "environment": "production",
+      "region": "us-east-1"
+    },
+    {
+      "id": "infra3",
+      "type": "aws_sqs_queue",
+      "provider": "aws",
+      "resource_name": "payments",
+      "resource_address": "module.sqs.aws_sqs_queue.payments",
+      "attributes": {
+        "name": "payment-mvp-payments"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-worker",
+      "service_arns": [],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375685",
+      "environment": "production",
+      "region": "us-east-1"
+    },
+    {
+      "id": "infra4",
+      "type": "aws_db_instance",
+      "provider": "aws",
+      "resource_name": "main",
+      "resource_address": "module.rds.aws_db_instance.main",
+      "attributes": {
+        "engine": "postgres",
+        "instance_class": "db.t3.micro"
+      },
+      "routes": [],
+      "target_group": null,
+      "listener_port": null,
+      "listener_protocol": null,
+      "service_name": "payment-api",
+      "service_arns": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "vpc_id": null,
+      "subnet_ids": [],
+      "security_group_ids": [],
+      "extracted_at": "2026-01-12T19:51:47.375693",
+      "environment": "production",
+      "region": "us-east-1"
+    }
+  ],
+  "services": [
+    {
+      "name": "payment-api",
+      "type": "api",
+      "language": "Python",
+      "framework": null,
+      "source_directory": "apps/payment-api",
+      "docker_image": null,
+      "api_ids": [
+        "api1",
+        "api2",
+        "api3",
+        "api4"
+      ],
+      "infrastructure_ids": [
+        "infra1",
+        "infra2",
+        "infra4"
+      ]
+    },
+    {
+      "name": "payment-worker",
+      "type": "infrastructure",
+      "language": null,
+      "framework": null,
+      "source_directory": null,
+      "docker_image": null,
+      "api_ids": [],
+      "infrastructure_ids": [
+        "infra3"
+      ]
+    }
+  ],
+  "log_enrichments": [],
+  "extracted_at": "2026-01-12T19:51:47.376060",
+  "environment": "production",
+  "source_directories": [
+    "api-connector"
+  ],
+  "terraform_directories": [
+    "api-connector"
+  ],
+  "stats": {
+    "total_apis": 4,
+    "total_infrastructure": 4,
+    "total_services": 2,
+    "api_methods": {
+      "GET": 1,
+      "POST": 3
+    },
+    "services_count": 1,
+    "infrastructure_types": {
+      "aws_lb": 1,
+      "aws_ecs_service": 1,
+      "aws_sqs_queue": 1,
+      "aws_db_instance": 1
+    },
+    "extraction_timestamp": "2026-01-12T19:51:47.376042"
+  },
+  "schema_version": "1.0.0"
+}
